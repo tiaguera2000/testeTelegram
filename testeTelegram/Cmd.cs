@@ -5,12 +5,14 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace testeTelegram
 {
  
-    public static class Cmd
+    public class Cmd
     {
+        
         const string cnx = "Data Source=10.5.0.4\\PRD;Initial Catalog=SINE_PRD;User ID=SINE_app;Password=s1n3pr0d@2014;Connection Timeout=40;MultipleActiveResultSets=true";
         public static string libera(string cpf)
         {
@@ -283,10 +285,11 @@ namespace testeTelegram
             }
 
         }
-        public static string vincula(string cpf, string email)
+        public static async Task<string> vincula(string cpf, string email)
         {
+            PCmd pcmd = new PCmd();
             string guid = "";
-            try {  guid = PCmd.getEmail(email); }
+            try { guid = await pcmd.getEmail(email); }
             catch(Exception e) { return "Postgre error:" + e.Message;  }
             
             using (SqlConnection sqlCon = new SqlConnection(cnx))
@@ -295,11 +298,11 @@ namespace testeTelegram
                 {
                     guid = Regex.Replace(guid, @"GUID da empresa :", "");
                     guid = Regex.Replace(guid, @"\s+", "");
-                    sqlCon.Open();
+                    await sqlCon.OpenAsync();
                     string query1 = $"select idf_pessoa_fisica from bne_imp.bne.tab_pessoa_fisica where num_cpf = {cpf}";
                     SqlCommand cmd = new SqlCommand(query1, sqlCon);
                     SqlDataReader reader = cmd.ExecuteReader();
-                    reader.Read();
+                    await reader.ReadAsync();
                     string idf_pf = reader["idf_pessoa_fisica"].ToString();
 
                     string query2 = $@"INSERT INTO BNE_IMP.BNE.TAB_Parametro_Pessoa_Fisica (Idf_Parametro,Idf_Pessoa_Fisica,Dta_Cadastro,Vlr_Parametro, Flg_Inativo, Dta_Alteracao)

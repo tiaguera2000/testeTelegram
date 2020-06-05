@@ -107,8 +107,15 @@ namespace testeTelegram
                     string msg = e.Message.Text.ToLower();
                     string cpf = Regex.Replace(msg, @"\/vincula | email.*", "");
                     string email = Regex.Match(msg, @"(?<=email ).*").ToString();
-                    string resultado = Cmd.vincula(cpf, email);
+                    string resultado = await Cmd.vincula(cpf, email);
                     await bot.SendTextMessageAsync(e.Message.Chat.Id, resultado);
+                }
+                else if (e.Message.Text.Contains("/confirma"))
+                {
+                    string email = e.Message.Text.Replace("/confirma ", "");
+                    string resultado = await pcmd.confirmEmail(email);
+                    await bot.SendTextMessageAsync(e.Message.Chat.Id, resultado);
+
                 }
             }
         }
