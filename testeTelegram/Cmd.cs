@@ -291,7 +291,7 @@ namespace testeTelegram
             string guid = "";
             try { guid = await pcmd.getEmail(email); }
             catch(Exception e) { return "Postgre error:" + e.Message;  }
-            
+
             using (SqlConnection sqlCon = new SqlConnection(cnx))
             {
                 try
@@ -321,9 +321,24 @@ namespace testeTelegram
             }
 
         }
-
+        /*public static async Task<string> GetProduct(string idf_vaga)
+        {
+            if (string.IsNullOrWhiteSpace(idf_vaga)) throw new Exception("Informe um idf_vaga!");
+            using (SqlConnection sqlCon = new SqlConnection(cnx))
+            {
+                string query = @"select v.idf_vaga,t.idf_transacao,t.vlr_transacao,t.dta_cadastro,t.idf_forma_pagamento,v.idf_usuario, t.Idf_Status_Transacao from sine.sin_vaga v
+join sine.sin_produto p on v.idf_vaga = p.idf_vaga join
+sine.sin_transacao_produto tp on p.idf_produto = tp.idf_produto join
+pagamento.pag_transacao t on t.idf_transacao = tp.idf_transacao join
+sine.sin_usuario u on v.idf_usuario = u.idf_usuario where
+v.idf_vaga = 5333300 order by t.dta_cadastro desc";
+            }
+        }*/
     }
-
+    
 
 }
+
+
+
 
