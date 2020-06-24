@@ -119,6 +119,12 @@ namespace testeTelegram
                         await bot.SendTextMessageAsync(e.Message.Chat.Id, resultado);
 
                     }
+                    else if (e.Message.Text.Contains("/produto"))
+                    {
+                        string idf_vaga = e.Message.Text.Replace("/produto ", "");
+                        string resultado = await Cmd.GetProduct(idf_vaga);
+                        await bot.SendTextMessageAsync(e.Message.Chat.Id, resultado);
+                    }
                 }
 
 

@@ -321,19 +321,44 @@ namespace testeTelegram
             }
 
         }
-        /*public static async Task<string> GetProduct(string idf_vaga)
+        public static async Task<string> GetProduct(string idf_vaga)
         {
             if (string.IsNullOrWhiteSpace(idf_vaga)) throw new Exception("Informe um idf_vaga!");
-            using (SqlConnection sqlCon = new SqlConnection(cnx))
+            try
             {
-                string query = @"select v.idf_vaga,t.idf_transacao,t.vlr_transacao,t.dta_cadastro,t.idf_forma_pagamento,v.idf_usuario, t.Idf_Status_Transacao from sine.sin_vaga v
-join sine.sin_produto p on v.idf_vaga = p.idf_vaga join
-sine.sin_transacao_produto tp on p.idf_produto = tp.idf_produto join
-pagamento.pag_transacao t on t.idf_transacao = tp.idf_transacao join
-sine.sin_usuario u on v.idf_usuario = u.idf_usuario where
-v.idf_vaga = 5333300 order by t.dta_cadastro desc";
+                using (SqlConnection sqlCon = new SqlConnection(cnx))
+                {
+                    string query = $@"select t.idf_transacao,t.vlr_transacao,t.dta_cadastro,t.idf_forma_pagamento,v.idf_usuario, t.Idf_Status_Transacao from sine.sin_vaga v
+                join sine.sin_produto p on v.idf_vaga = p.idf_vaga join
+                sine.sin_transacao_produto tp on p.idf_produto = tp.idf_produto join
+                pagamento.pag_transacao t on t.idf_transacao = tp.idf_transacao join
+                sine.sin_usuario u on v.idf_usuario = u.idf_usuario where
+                v.idf_vaga = {idf_vaga} order by t.dta_cadastro desc";
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                    await sqlCon.OpenAsync();
+                    DataTable table = new DataTable();
+                    sqlDa.Fill(table);
+                    string result = "";
+                    for (int i = 0; i < table.Rows.Count; i++)
+                    {
+                        string idt = table.Rows[i].ItemArray[0].ToString();
+                        string vlr = table.Rows[i].ItemArray[1].ToString();
+                        string dta = table.Rows[i].ItemArray[2].ToString();
+                        string fpgt = table.Rows[i].ItemArray[3].ToString();
+                        string idu = table.Rows[i].ItemArray[4].ToString();
+                        string ist = table.Rows[i].ItemArray[5].ToString();
+                        if (fpgt == "1") fpgt = "Boleto";
+                        else if (fpgt == "2") fpgt = "Cartao";
+                        if (ist == "1") ist = "Aguardando Pagamento";
+                        else if (ist == "2") ist = "Pago!";
+                        result += $"\nId Transacao: {idt} Valor: {vlr}\nData: {dta} f.pagamento: {fpgt}\nId.U: {idu} Status: {ist}";
+                    }
+
+                    return result;
+                }
             }
-        }*/
+            catch(Exception e) { return e.Message; }
+        }
     }
     
 
